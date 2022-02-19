@@ -5,6 +5,7 @@ const connectDB = require("./config/db")
 const userRouters = require("./routes/userRoutes")
 const noteRoutes = require("./routes/noteRoutes")
 const { notFound, errorHandler } = require("./middlewares/errorMiddleware.js")
+const path = require("path")
 
 const app = express()
 app.use(cors())
@@ -12,10 +13,6 @@ dotenv.config()
 
 connectDB()
 app.use(express.json())
-
-app.get("/", (req, res) => {
-  res.send("My apis running ")
-})
 
 //app.get("/api/notes", (req, res) => {
 //  res.json(notes)
@@ -37,6 +34,18 @@ app.get("/", (req, res) => {
 app.use("/api/users", userRouters)
 app.use("/api/notes", noteRoutes)
 
+__dirname = path.resolve()
+if (process.env.NODE_ENV === "production") {
+  app.use(express.static(path.join(__dirname, "/frontend/build")))
+
+  app.get("*", (req, res) => {
+    res.sendFile(path.resolve(__dirname, "/frontend", "build", "index.html"))
+  })
+} else {
+  app.get("/", (req, res) => {
+    res.send("My apis running ")
+  })
+}
 app.use(notFound)
 app.use(errorHandler)
 

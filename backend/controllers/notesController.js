@@ -31,6 +31,7 @@ const getNoteById = asyncHandler(async (req, res) => {
 
 const UpdateNote = asyncHandler(async (req, res) => {
   const { title, content, category } = req.body
+
   const note = await Note.findById(req.params.id)
 
   if (note.user.toString() !== req.user._id.toString()) {

@@ -8,6 +8,7 @@ const {
 } = require("../controllers/notesController")
 
 const { protect } = require("../middlewares/authMiddleware")
+
 const router = express.Router()
 
 router.route("/").get(protect, getNotes)
